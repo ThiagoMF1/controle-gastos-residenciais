@@ -1,0 +1,6 @@
+bin/
+obj/
+node_modules/
+gastos.db
+*.db-shm
+*.db-wal
