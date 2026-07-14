@@ -1,7 +1,7 @@
 using backend.Models;
 using backend.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Windows.Markup;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,6 +115,67 @@ app.MapGet("/transacoes", async (BancoContext banco) =>
     var transacoes = await banco.Transacoes.ToListAsync();
 
     return Results.Ok(transacoes);
+});
+
+
+app.MapGet("/totais", async (BancoContext banco) =>
+{
+    var pessoas = await banco.Pessoas.ToListAsync();
+    var transacoes = await banco.Transacoes.ToListAsync();
+
+    var totaisPessoas = new List<object>();
+
+    decimal totalReceitasGeral = 0;
+    decimal totalDespesasGeral = 0;
+
+    foreach (var pessoa in pessoas)
+    {
+        decimal totalReceitas = 0;
+        decimal totalDespesas = 0;
+
+        foreach (var transacao in transacoes)
+        {
+            if (transacao.PessoaId == pessoa.Id)
+            {
+                if (transacao.Tipo == "receita")
+                {
+                    totalReceitas += transacao.Valor;
+                }
+
+                if (transacao.Tipo == "despesa")
+                {
+                    totalDespesas += transacao.Valor;
+                }
+            }
+        }
+
+        decimal saldo = totalReceitas - totalDespesas;
+
+        totaisPessoas.Add(new
+        {
+            pessoaId = pessoa.Id,
+            nome = pessoa.Nome,
+            totalReceitas,
+            totalDespesas,
+            saldo
+        });
+
+        totalReceitasGeral += totalReceitas;
+        totalDespesasGeral += totalDespesas;
+    }
+
+    decimal saldoGeral = totalReceitasGeral - totalDespesasGeral;
+
+    return Results.Ok(new
+    {
+        pessoas = totaisPessoas,
+        totalGeral = new
+        {
+            totalReceitas = totalReceitasGeral,
+            totalDespesas = totalDespesasGeral,
+            saldo = saldoGeral
+        }
+    });
 });
 
 app.Run();
