@@ -1,5 +1,20 @@
 import { useEffect, useState } from 'react'
 
+// Componente principal da interface e responsável pela comunicação com a API.
+
+/*
+Front-end do sistema de controle de gastos residenciais.
+
+Responsável por exibir a interface da aplicação e permitir:
+- cadastro e listagem de pessoas;
+- exclusão de pessoas;
+- cadastro e listagem de transações;
+- consulta dos totais de receitas, despesas e saldos;
+- comunicação com o back-end através de requisições HTTP.
+
+O front-end foi desenvolvido com React e TypeScript.
+*/
+
 type Pessoa = {
   id: number
   nome: string
@@ -80,7 +95,7 @@ function App() {
     await fetch(`http://localhost:5021/pessoas/${id}`, {
       method: 'DELETE',
     })
-
+    // Atualiza os dados da tela após excluir a pessoa e suas transações.
     carregarPessoas()
     carregarTransacoes()
     carregarTotais()
@@ -102,6 +117,7 @@ function App() {
       }),
     })
 
+    // Mostra a mensagem retornada pelo back-end quando a transação é inválida.
     if (!resposta.ok) {
       const erro = await resposta.text()
       setMensagem(erro)
@@ -124,6 +140,7 @@ function App() {
     setTotais(dados)
   }
 
+  // Carrega os dados iniciais quando a página é aberta.
   useEffect(() => {
     carregarPessoas()
     carregarTransacoes()
