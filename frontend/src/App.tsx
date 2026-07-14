@@ -131,12 +131,46 @@ function App() {
   }, [])
 
   return (
-    <main>
-      <h1>Controle de Gastos Residenciais</h1>
+    <main className="dashboard">
+      <header className="cabecalho">
+        <div>
+          <p className="subtitulo">Visão geral</p>
+          <h1>Controle de Gastos Residenciais</h1>
+          <p>Gerencie pessoas, receitas, despesas e saldos.</p>
+        </div>
+      </header>
 
-      <section>
+      {totais && (
+        <section className="resumo">
+          <article className="card resumo-card">
+            <span>Total de receitas</span>
+            <strong className="receita">
+              R$ {totais.totalGeral.totalReceitas.toFixed(2)}
+            </strong>
+          </article>
+
+          <article className="card resumo-card">
+            <span>Total de despesas</span>
+            <strong className="despesa">
+              R$ {totais.totalGeral.totalDespesas.toFixed(2)}
+            </strong>
+          </article>
+
+          <article className="card resumo-card">
+            <span>Saldo geral</span>
+            <strong className={totais.totalGeral.saldo >= 0 ? 'receita' : 'despesa'}>
+              R$ {totais.totalGeral.saldo.toFixed(2)}
+            </strong>
+          </article>
+
+          <article className="card resumo-card">
+            <span>Pessoas cadastradas</span>
+            <strong>{pessoas.length}</strong>
+          </article>
+        </section>
+      )}
+      <section className="card">
         <h2>Cadastro de Pessoas</h2>
-
         <form onSubmit={cadastrarPessoa}>
           <label>
             Nome
@@ -160,7 +194,7 @@ function App() {
         </form>
       </section>
 
-      <section>
+      <section className="card">
         <h2>Pessoas Cadastradas</h2>
 
         {pessoas.length === 0 ? (
@@ -179,7 +213,7 @@ function App() {
         )}
       </section>
 
-      <section>
+      <section className="card">
         <h2>Cadastro de Transações</h2>
 
         <form onSubmit={cadastrarTransacao}>
@@ -235,7 +269,7 @@ function App() {
         {mensagem && <p>{mensagem}</p>}
       </section>
 
-      <section>
+      <section className="card">
         <h2>Transações Cadastradas</h2>
 
         {transacoes.length === 0 ? (
@@ -251,7 +285,7 @@ function App() {
         )}
       </section>
 
-      <section>
+      <section className="card">
         <h2>Consulta de Totais</h2>
 
         {!totais ? (
