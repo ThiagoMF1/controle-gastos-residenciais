@@ -68,12 +68,14 @@ cd backend
 
 Restaure os pacotes:
 
+```bash
 dotnet restore
-
+```
 Execute a API:
 
+```bash
 dotnet run
-
+```
 A API será iniciada em:
 
 http://localhost:5021
